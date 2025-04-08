@@ -8,38 +8,42 @@ import java.lang.reflect.Method;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@interface TaskInfo {
-    String priority();
-    String assignedTo();
+@interface ImportantMethod {
+    String level() default "HIGH";
 }
 
-
-class TaskManager {
-
-    @TaskInfo(priority = "High", assignedTo = "Sanya")
-    public void completeReport() {
-        System.out.println("Completing report");
+class ImportantClass {
+    @ImportantMethod(level = "LOW")
+    public void displayMessage() {
+        System.out.println("Hello, World!");
     }
 
-    @TaskInfo(priority = "Low", assignedTo = "Sehaj")
-    public void archiveFiles() {
-        System.out.println("Archiving files");
+    @ImportantMethod()
+    public int add(int a, int b) {
+        return a + b;
     }
 }
-
 
 public class CustomAnnotation {
-    public static void main(String[] args) {
-        Class<TaskManager> cls = TaskManager.class;
+    public static void main(String[] args) throws Exception {
+        ImportantClass importantClass = new ImportantClass();
+        Class<?> cls = importantClass.getClass();
 
-        for (Method method : cls.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(TaskInfo.class)) {
-                TaskInfo task = method.getAnnotation(TaskInfo.class);
-                System.out.println("Method: " + method.getName());
-                System.out.println("Priority: " + task.priority());
-                System.out.println("Assigned To: " + task.assignedTo());
-                System.out.println();
-            }
+        System.out.println("Important Methods:");
+
+        Method method1 = cls.getDeclaredMethod("displayMessage");
+        if (method1.isAnnotationPresent(ImportantMethod.class)) {
+            ImportantMethod annotation = method1.getAnnotation(ImportantMethod.class);
+            System.out.println("Method: " + method1.getName() + ", Importance Level: " + annotation.level());
+            importantClass.displayMessage();
+        }
+
+        Method method2 = cls.getDeclaredMethod("add", int.class, int.class);
+        if (method2.isAnnotationPresent(ImportantMethod.class)) {
+            ImportantMethod annotation = method2.getAnnotation(ImportantMethod.class);
+            System.out.println("Method: " + method2.getName() + ", Importance Level: " + annotation.level());
+            int result = importantClass.add(4, 9);
+            System.out.println("Addition result: " + result);
         }
     }
 }
