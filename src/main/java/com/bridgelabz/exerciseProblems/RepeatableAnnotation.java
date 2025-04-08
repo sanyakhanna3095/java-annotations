@@ -1,4 +1,4 @@
-package com.bridgelabz.basicProblems;
+package com.bridgelabz.exerciseProblems;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
